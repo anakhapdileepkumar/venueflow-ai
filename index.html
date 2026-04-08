@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VenueFlow AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>VenueFlow AI</h1>
+    <p>Smart Sporting Venue Assistant</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Live Venue Status</h2>
+      <div class="status-grid">
+        <div class="status-box crowded">
+          <h3>Gate A</h3>
+          <p>High Crowd</p>
+        </div>
+
+        <div class="status-box medium">
+          <h3>Gate B</h3>
+          <p>Medium Crowd</p>
+        </div>
+
+        <div class="status-box low">
+          <h3>Food Stall</h3>
+          <p>5 min wait</p>
+        </div>
+
+        <div class="status-box low">
+          <h3>Washroom</h3>
+          <p>2 min wait</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Smart Assistant</h2>
+      <div class="buttons">
+        <button onclick="findGate()">Best Entry Gate</button>
+        <button onclick="findFood()">Fastest Food</button>
+        <button onclick="findWashroom()">Nearest Washroom</button>
+        <button onclick="findExit()">Best Exit</button>
+      </div>
+
+      <div id="result">
+        Click a button to get recommendation
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
