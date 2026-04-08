@@ -1,3 +1,4 @@
+// Venue Data
 const venueData = {
   gates: [
     { name: "Gate A", crowd: 90, distance: 2 },
@@ -20,6 +21,58 @@ const venueData = {
     { name: "Exit C", crowd: 50, distance: 3 }
   ]
 };
+
+// ---------------- UI LOADING ----------------
+
+function loadVenueStatus() {
+  const container = document.getElementById("status-container");
+  container.innerHTML = "";
+
+  // Gates
+  venueData.gates.forEach(gate => {
+    const div = document.createElement("div");
+    div.className = getCrowdClass(gate.crowd);
+    div.innerHTML = `
+      <h3>${gate.name}</h3>
+      <p>Crowd: ${gate.crowd}</p>
+    `;
+    container.appendChild(div);
+  });
+
+  // Food Stalls
+  venueData.foodStalls.forEach(stall => {
+    const div = document.createElement("div");
+    div.className = "status-box low";
+    div.innerHTML = `
+      <h3>${stall.name}</h3>
+      <p>Wait: ${stall.wait} min</p>
+    `;
+    container.appendChild(div);
+  });
+
+  // Washrooms
+  venueData.washrooms.forEach(w => {
+    const div = document.createElement("div");
+    div.className = "status-box low";
+    div.innerHTML = `
+      <h3>${w.name}</h3>
+      <p>Wait: ${w.wait} min</p>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Color logic for crowd
+function getCrowdClass(crowd) {
+  if (crowd > 70) return "status-box crowded";
+  if (crowd > 40) return "status-box medium";
+  return "status-box low";
+}
+
+// Load UI when page opens
+window.onload = loadVenueStatus;
+
+// ---------------- DECISION LOGIC ----------------
 
 function findBestOption(options, mode) {
   let best = options[0];
@@ -46,26 +99,28 @@ function findBestOption(options, mode) {
   return best;
 }
 
+// ---------------- BUTTON FUNCTIONS ----------------
+
 function findGate() {
-  const bestGate = findBestOption(venueData.gates, "crowd");
+  const best = findBestOption(venueData.gates, "crowd");
   document.getElementById("result").innerText =
-    `${bestGate.name} is the best entry option based on lower crowd and easier access.`;
+    `${best.name} is the best entry option (low crowd + good access).`;
 }
 
 function findFood() {
-  const bestFood = findBestOption(venueData.foodStalls, "wait");
+  const best = findBestOption(venueData.foodStalls, "wait");
   document.getElementById("result").innerText =
-    `${bestFood.name} is the best food option based on shorter wait time and distance.`;
+    `${best.name} is the fastest food option right now.`;
 }
 
 function findWashroom() {
-  const bestWashroom = findBestOption(venueData.washrooms, "wait");
+  const best = findBestOption(venueData.washrooms, "wait");
   document.getElementById("result").innerText =
-    `${bestWashroom.name} is the most convenient washroom right now.`;
+    `${best.name} is the most convenient washroom.`;
 }
 
 function findExit() {
-  const bestExit = findBestOption(venueData.exits, "crowd");
+  const best = findBestOption(venueData.exits, "crowd");
   document.getElementById("result").innerText =
-    `${bestExit.name} is the best exit based on lower crowd and smoother movement.`;
+    `${best.name} is the best exit with smooth movement.`;
 }
