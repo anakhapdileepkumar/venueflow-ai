@@ -1,126 +1,143 @@
-// Venue Data
 const venueData = {
   gates: [
-    { name: "Gate A", crowd: 90, distance: 2 },
-    { name: "Gate B", crowd: 40, distance: 4 },
-    { name: "Gate C", crowd: 60, distance: 3 }
+    { name: "Gate A", crowd: 90, zone: 1 },
+    { name: "Gate B", crowd: 40, zone: 2 },
+    { name: "Gate C", crowd: 60, zone: 4 }
   ],
   foodStalls: [
-    { name: "Food Stall 1", wait: 15, distance: 2 },
-    { name: "Food Stall 2", wait: 5, distance: 4 },
-    { name: "Food Stall 3", wait: 8, distance: 3 }
+    { name: "Food Stall 1", wait: 15, zone: 1 },
+    { name: "Food Stall 2", wait: 5, zone: 2 },
+    { name: "Food Stall 3", wait: 8, zone: 4 }
   ],
   washrooms: [
-    { name: "Washroom 1", wait: 3, distance: 2 },
-    { name: "Washroom 2", wait: 1, distance: 5 },
-    { name: "Washroom 3", wait: 2, distance: 3 }
+    { name: "Washroom 1", wait: 3, zone: 1 },
+    { name: "Washroom 2", wait: 1, zone: 3 },
+    { name: "Washroom 3", wait: 2, zone: 4 }
   ],
   exits: [
-    { name: "Exit A", crowd: 80, distance: 2 },
-    { name: "Exit B", crowd: 30, distance: 4 },
-    { name: "Exit C", crowd: 50, distance: 3 }
+    { name: "Exit A", crowd: 80, zone: 1 },
+    { name: "Exit B", crowd: 30, zone: 3 },
+    { name: "Exit C", crowd: 50, zone: 4 }
   ]
 };
 
-// ---------------- UI LOADING ----------------
-
 function loadVenueStatus() {
-  const container = document.getElementById("status-container");
-  container.innerHTML = "";
+  const gatesContainer = document.getElementById("gates-container");
+  const foodContainer = document.getElementById("food-container");
+  const washroomContainer = document.getElementById("washroom-container");
 
-  // Gates
+  gatesContainer.innerHTML = "";
+  foodContainer.innerHTML = "";
+  washroomContainer.innerHTML = "";
+
   venueData.gates.forEach(gate => {
     const div = document.createElement("div");
     div.className = getCrowdClass(gate.crowd);
     div.innerHTML = `
       <h3>${gate.name}</h3>
       <p>Crowd: ${gate.crowd}</p>
+      <p>Zone: ${gate.zone}</p>
     `;
-    container.appendChild(div);
+    gatesContainer.appendChild(div);
   });
 
-  // Food Stalls
   venueData.foodStalls.forEach(stall => {
     const div = document.createElement("div");
-    div.className = "status-box low";
+    div.className = getWaitClass(stall.wait);
     div.innerHTML = `
       <h3>${stall.name}</h3>
       <p>Wait: ${stall.wait} min</p>
+      <p>Zone: ${stall.zone}</p>
     `;
-    container.appendChild(div);
+    foodContainer.appendChild(div);
   });
 
-  // Washrooms
-  venueData.washrooms.forEach(w => {
+  venueData.washrooms.forEach(washroom => {
     const div = document.createElement("div");
-    div.className = "status-box low";
+    div.className = getWaitClass(washroom.wait);
     div.innerHTML = `
-      <h3>${w.name}</h3>
-      <p>Wait: ${w.wait} min</p>
+      <h3>${washroom.name}</h3>
+      <p>Wait: ${washroom.wait} min</p>
+      <p>Zone: ${washroom.zone}</p>
     `;
-    container.appendChild(div);
+    washroomContainer.appendChild(div);
   });
 }
 
-// Color logic for crowd
 function getCrowdClass(crowd) {
   if (crowd > 70) return "status-box crowded";
   if (crowd > 40) return "status-box medium";
   return "status-box low";
 }
 
-// Load UI when page opens
-window.onload = loadVenueStatus;
+function getWaitClass(wait) {
+  if (wait > 10) return "status-box crowded";
+  if (wait > 5) return "status-box medium";
+  return "status-box low";
+}
 
-// ---------------- DECISION LOGIC ----------------
+function getUserZone() {
+  return Number(document.getElementById("user-location").value);
+}
+
+function calculateScore(option, mode, userZone) {
+  const zoneDifference = Math.abs(option.zone - userZone);
+
+  if (mode === "crowd") {
+    return option.crowd + zoneDifference * 10;
+  }
+
+  return option.wait + zoneDifference * 2;
+}
 
 function findBestOption(options, mode) {
+  const userZone = getUserZone();
   let best = options[0];
+  let bestScore = calculateScore(best, mode, userZone);
 
   for (let i = 1; i < options.length; i++) {
     const current = options[i];
-
-    let currentScore;
-    let bestScore;
-
-    if (mode === "crowd") {
-      currentScore = current.crowd + current.distance;
-      bestScore = best.crowd + best.distance;
-    } else {
-      currentScore = current.wait + current.distance;
-      bestScore = best.wait + best.distance;
-    }
+    const currentScore = calculateScore(current, mode, userZone);
 
     if (currentScore < bestScore) {
       best = current;
+      bestScore = currentScore;
     }
   }
 
   return best;
 }
 
-// ---------------- BUTTON FUNCTIONS ----------------
-
 function findGate() {
   const best = findBestOption(venueData.gates, "crowd");
+  const userZone = getUserZone();
+
   document.getElementById("result").innerText =
-    `${best.name} is the best entry option (low crowd + good access).`;
+    `Recommended: ${best.name}\nReason: It has a better balance of lower crowd and proximity from Zone ${userZone}.`;
 }
 
 function findFood() {
   const best = findBestOption(venueData.foodStalls, "wait");
+  const userZone = getUserZone();
+
   document.getElementById("result").innerText =
-    `${best.name} is the fastest food option right now.`;
+    `Recommended: ${best.name}\nReason: It offers a shorter waiting time and is convenient from Zone ${userZone}.`;
 }
 
 function findWashroom() {
   const best = findBestOption(venueData.washrooms, "wait");
+  const userZone = getUserZone();
+
   document.getElementById("result").innerText =
-    `${best.name} is the most convenient washroom.`;
+    `Recommended: ${best.name}\nReason: It is the most convenient washroom based on wait time and distance from Zone ${userZone}.`;
 }
 
 function findExit() {
   const best = findBestOption(venueData.exits, "crowd");
+  const userZone = getUserZone();
+
   document.getElementById("result").innerText =
-    `${best.name} is the best exit with smooth movement.`;
+    `Recommended: ${best.name}\nReason: It provides smoother exit movement with less congestion from Zone ${userZone}.`;
 }
+
+window.onload = loadVenueStatus;

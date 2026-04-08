@@ -15,11 +15,38 @@
   <main class="container">
     <section class="card">
       <h2>Live Venue Status</h2>
-      <div id="status-container" class="status-grid"></div>
+
+      <div class="status-grid">
+        <div>
+          <h3>Gates</h3>
+          <div id="gates-container" class="inner-grid"></div>
+        </div>
+
+        <div>
+          <h3>Food Stalls</h3>
+          <div id="food-container" class="inner-grid"></div>
+        </div>
+
+        <div>
+          <h3>Washrooms</h3>
+          <div id="washroom-container" class="inner-grid"></div>
+        </div>
+      </div>
     </section>
 
     <section class="card">
       <h2>Smart Assistant</h2>
+
+      <div class="input-group">
+        <label for="user-location">Your current zone:</label>
+        <select id="user-location">
+          <option value="1">Zone 1</option>
+          <option value="2">Zone 2</option>
+          <option value="3">Zone 3</option>
+          <option value="4">Zone 4</option>
+        </select>
+      </div>
+
       <div class="buttons">
         <button onclick="findGate()">Best Entry Gate</button>
         <button onclick="findFood()">Fastest Food</button>
@@ -28,7 +55,7 @@
       </div>
 
       <div id="result">
-        Click a button to get recommendation
+        Select your zone and click a button to get a recommendation.
       </div>
     </section>
   </main>
