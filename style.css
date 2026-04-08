@@ -14,7 +14,7 @@ header {
 
 .container {
   width: 90%;
-  max-width: 900px;
+  max-width: 1100px; /* increased for 3-column layout */
   margin: 20px auto;
 }
 
@@ -23,38 +23,49 @@ header {
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* subtle shadow */
 }
 
+/* MAIN GRID */
 .status-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  align-items: start;
 }
 
+/* INNER GRID */
 .inner-grid {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   margin-top: 10px;
 }
 
+/* CARDS */
 .status-box {
   padding: 15px;
   color: white;
   border-radius: 8px;
+  min-height: 120px; /* equal height look */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
+/* COLORS */
 .crowded {
-  background: red;
+  background: #ef4444; /* better red */
 }
 
 .medium {
-  background: orange;
+  background: #f59e0b; /* better orange */
 }
 
 .low {
-  background: green;
+  background: #16a34a; /* better green */
 }
 
+/* BUTTONS */
 .buttons {
   margin: 15px 0;
 }
@@ -67,20 +78,24 @@ button {
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 button:hover {
   background: #1d4ed8;
 }
 
+/* RESULT BOX */
 #result {
   margin-top: 15px;
   padding: 12px;
   background: #eef2ff;
   border-radius: 6px;
   line-height: 1.5;
+  white-space: pre-line; /* for line breaks */
 }
 
+/* INPUT */
 .input-group {
   margin: 12px 0;
 }
@@ -97,9 +112,12 @@ select {
   border: 1px solid #ccc;
 }
 
+/* HEADINGS */
 h2, h3 {
   margin-top: 0;
 }
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .status-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -109,5 +127,14 @@ h2, h3 {
 @media (max-width: 600px) {
   .status-grid {
     grid-template-columns: 1fr;
+  }
+
+  .container {
+    width: 95%;
+  }
+
+  button {
+    width: 100%;
+    margin: 6px 0;
   }
 }
